@@ -16,7 +16,8 @@ export const register = async (req, res) => {
         return res.status(400).send(verifyReq.message);
     }
 
-    const { first_name, last_name, email, phone, password, user_role } = req.body;
+    const business_logo = req.files && req.files['file'] ? "localhost:3000/" + req.files['file'][0].path : "no_image";
+    const { first_name, last_name, email, phone, password, user_role, business_name, business_type } = req.body;
 
     try {
         const existingUser = await User.findOne({ email });
@@ -26,7 +27,7 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new User({ first_name, last_name, email, phone, password: hashedPassword, user_role });
+        const newUser = new User({ first_name, last_name, email, phone, password: hashedPassword, user_role, business_name, business_type, business_logo });
         await newUser.save();
 
         res.status(201).json({ success: true, message: 'User registered successfully' });

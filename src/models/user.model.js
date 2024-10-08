@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     phone: {
-        type: Number,
+        type: String,
         required: true,
     },
     password: {
@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     },
     user_type: {
         type: String,
-        enum: ['user','organizer', 'sponsor'],
+        enum: ['organizer', 'sponsor'],
         default: 'organizer'
     },
     status: {
@@ -40,6 +40,45 @@ const userSchema = new mongoose.Schema({
         enum: ['active', 'inactive'],
         default: 'active'
     },
+    business_name: {
+        type: String,
+        default: null,
+        validate: {
+            validator: function (v) {
+                if (this.user_type === 'sponsor') {
+                    return v != null && v.length > 0;
+                }
+                return true;
+            },
+            message: 'Business name is required for sponsors'
+        }
+    },
+    business_type: {
+        type: String,
+        default: null,
+        validate: {
+            validator: function (v) {
+                if (this.user_type === 'sponsor') {
+                    return v != null && v.length > 0;
+                }
+                return true;
+            },
+            message: 'Business type is required for sponsors'
+        }
+    },
+    business_logo: {
+        type: String,
+        default: null,
+        validate: {
+            validator: function (v) {
+                if (this.user_type === 'sponsor') {
+                    return v != null && v.length > 0;
+                }
+                return true;
+            },
+            message: 'Business logo is required for sponsors'
+        }
+    }
 }, {
     timestamps: true
 });
