@@ -13,14 +13,14 @@ export const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
         if (err) {
-            return res.status(403).json({ message: 'Invalid token' });
+            return res.status(403).json({ success: false, message: 'Invalid token' });
         }
-        req.user = decodedToken;
+        req.payload = decodedToken;
         next();
     });
 };

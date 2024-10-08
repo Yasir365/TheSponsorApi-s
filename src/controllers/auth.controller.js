@@ -73,12 +73,12 @@ export const login = async (req, res) => {
 
 
 export const forgetPassword = async (req, res) => {
-    const verifyReq = verifySchema(schema.forgetPassword, req.query);
+    const verifyReq = verifySchema(schema.forgetPassword, req.body);
     if (!verifyReq.success) {
         return res.status(400).send(verifyReq.message);
     }
 
-    const { email } = req.query;
+    const { email } = req.body;
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -86,7 +86,7 @@ export const forgetPassword = async (req, res) => {
         }
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const otpExpiry = new Date(Date.now() + 60 * 1000);
+        const otpExpiry = new Date(Date.now() + 60 * 3000);
 
         user.otp = otp;
         user.otpExpiry = otpExpiry;
@@ -96,7 +96,7 @@ export const forgetPassword = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: 'OTP sent to your email',
+            message: 'OTP sent to your email. Email will expire in 3 minute',
             email: user.email,
         });
 
@@ -104,8 +104,6 @@ export const forgetPassword = async (req, res) => {
         res.status(200).json({ success: false, message: error.message });
     }
 }
-
-
 
 
 export const verifyOTP = async (req, res) => {
@@ -116,27 +114,23 @@ export const verifyOTP = async (req, res) => {
 
     const { email, otp } = req.body;
     try {
-        // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        // Check if OTP matches and has not expired
         if (user.otp !== otp || user.otpExpiry < Date.now()) {
-            return res.status(400).json({ message: 'Invalid or expired OTP' });
+            return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
         }
 
-        // Return user data without the password along with the token
         return res.status(200).json({
             message: 'OTP verfication successful',
             success: true
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(200).json({ success: false, message: error.message });
     }
 };
-
 
 
 export const resetPassword = async (req, res) => {
@@ -147,23 +141,20 @@ export const resetPassword = async (req, res) => {
 
     const { email, password } = req.body;
     try {
-        // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        // Encrypt the new password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Update user's password
         user.password = hashedPassword;
         await user.save();
 
-        return res.status(200).json({ message: 'Password reset successful', success: true });
+        return res.status(200).json({ success: true, message: 'Password reset successfully!' });
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -197,26 +188,23 @@ export const changePassword = async (req, res) => {
         return res.status(400).send(verifyReq.message);
     }
 
-    const email = req.user.email;
+    const email = req.payload.email;
     const { oldPassword, newPassword } = req.body;
     try {
         const user = await User.findOne({ email });
 
-        // Check if old password is correct
         const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
         if (!isPasswordValid) {
-            return res.status(200).json({ message: 'Incorrect old password', success: false });
+            return res.status(200).json({ success: false, message: 'Incorrect old password' });
         }
 
-        // Encrypt the new password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update user's password
         user.password = hashedPassword;
         await user.save();
 
-        return res.status(200).json({ message: 'Password changed successfully', success: true });
+        return res.status(200).json({ success: false, message: 'Password changed successfully' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 }
