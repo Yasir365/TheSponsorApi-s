@@ -24,7 +24,7 @@ export const addEvent = async (req, res) => {
 
             const tempEvent = {
                 ...req.body,
-                event_image,
+                event_image: event_image,
                 creater: req.payload._id,
             };
 
@@ -38,7 +38,7 @@ export const addEvent = async (req, res) => {
             });
 
 
-            
+
         } else if (req.body.step == 2) {
             const verifyReq = verifySchema(schema.addEvent.step2, req.body);
             if (!verifyReq.success) {
@@ -92,33 +92,8 @@ export const addEvent = async (req, res) => {
 
 
 
-export const uploadSponsorImage = async (req, res) => {
+export const uploadFile = async (req, res) => {
     try {
-        if (!req.body.event_id) {
-            return res.status(400).json({ success: false, message: 'Event ID is required' });
-        }
-
-        const file = req.files.file ? "localhost:3000/" + req.files.file[0].path : null;
-
-        if (!file) {
-            return res.status(400).json({ success: false, message: 'File is required' });
-        }
-
-        res.status(200).json({ success: true, file: file, message: 'File uploaded successfully' });
-    } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to update event', error: error.message });
-    }
-
-}
-
-
-
-export const uploadOrganizerImage = async (req, res) => {
-    try {
-        if (!req.body.event_id) {
-            return res.status(400).json({ success: false, message: 'Event ID is required' });
-        }
-
         const file = req.files.file ? "localhost:3000/" + req.files.file[0].path : null;
 
         if (!file) {

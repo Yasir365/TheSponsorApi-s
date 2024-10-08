@@ -18,7 +18,7 @@ const sponsorProductSchema = new mongoose.Schema({
 const organizerSchema = new mongoose.Schema({
     file: {
         type: String,
-        required: true
+        default: ''
     },
     socialMedia: {
         instagram: {
