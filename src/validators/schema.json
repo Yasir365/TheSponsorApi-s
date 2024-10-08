@@ -76,25 +76,43 @@
   
 
     "addEvent": {
-      "type": "object",
-      "properties": {
-          "name": { "type": "string" },
-          "type": { "type": "string" },
-          "location": { "type": "string" },
-          "start_date": { "type": "string" },
-          "end_date": { "type": "string" },
-          "start_time": { "type": "string" },
-          "end_time": { "type": "string" },
-          "event_details": { "type": "string" },
-          "links": { "type": "Array" },
-          "sponsor_products": { "type": "Array" },
-          "organizer": { "type": "object" },
-
-          "sponsor_products_images": { "type": "string" },
-          "organizer_images": { "type": "Array" }
+      "step1": {
+        "type": "object",
+        "properties": {
+            "name": { "type": "string" },
+            "type": { "type": "string" },
+            "location": { "type": "string" },
+            "start_date": { "type": "string" },
+            "end_date": { "type": "string" },
+            "start_time": { "type": "string" },
+            "end_time": { "type": "string" },
+            "step": { "type": "string" }
+          },
+        "required": ["name", "type", "location", "start_date", "end_date", "start_time", "end_time", "step"],
+        "additionalProperties": false
+      },
+      "step2": {
+        "type": "object",
+        "properties": {
+            "event_id": { "type": "string" },
+            "event_details": { "type": "string" },
+            "links": { "type": "Array" },
+            "sponsor_products": { "type": "Array" },
+            "step": { "type": "string" }
+          },
+          "required": ["event_id", "event_details", "links", "sponsor_products", "step"],
+          "additionalProperties": false
         },
-      "required": ["name", "type", "location", "start_date", "end_date", "start_time", "end_time", "event_details", "links", "sponsor_products", "organizer", "sponsor_products_images", "organizer_images"],
-      "additionalProperties": false
+        "step3": {
+          "type": "object",
+          "properties": {
+            "event_id": { "type": "string" },
+            "organizer": { "type": "object" },
+            "step": { "type": "string" }
+          },
+        "required": ["event_id", "organizer", "step"],
+        "additionalProperties": false
+      }
     },
 
 

@@ -16,14 +16,9 @@ const sponsorProductSchema = new mongoose.Schema({
 });
 
 const organizerSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users', 
-        required: true
-    },
     file: {
         type: String,
-        required: true 
+        required: true
     },
     socialMedia: {
         instagram: {
@@ -37,6 +32,7 @@ const organizerSchema = new mongoose.Schema({
         }
     }
 });
+
 const eventSchema = new mongoose.Schema({
     event_image: {
         type: String,
@@ -77,12 +73,11 @@ const eventSchema = new mongoose.Schema({
     },
     event_details: {
         type: String,
-        required: true
+        default: ''
     },
     links: {
         type: [String],
         default: [],
-        required: true
     },
     sponsor_products: {
         type: [sponsorProductSchema],
@@ -90,8 +85,21 @@ const eventSchema = new mongoose.Schema({
     },
     organizer: {
         type: organizerSchema,
+        default: {}
+    },
+    step: {
+        type: String,
+        default: 1
+    },
+    completion_status: {
+        type: Boolean,
+        default: false
+    },
+    creater: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
         required: true
-    }
+    },
 }, {
     timestamps: true
 });
