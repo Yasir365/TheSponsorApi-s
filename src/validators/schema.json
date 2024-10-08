@@ -86,10 +86,14 @@
           "start_time": { "type": "string" },
           "end_time": { "type": "string" },
           "event_details": { "type": "string" },
-          "sponsor_details": { "type": "string" },
-          "organizer": { "type": "object" }
-      },
-      "required": ["name", "type", "location", "start_date", "end_date", "start_time", "end_time", "event_details", "sponsor_details", "organizer"],
+          "links": { "type": "Array" },
+          "sponsor_products": { "type": "Array" },
+          "organizer": { "type": "object" },
+
+          "sponsor_products_images": { "type": "string" },
+          "organizer_images": { "type": "Array" }
+        },
+      "required": ["name", "type", "location", "start_date", "end_date", "start_time", "end_time", "event_details", "links", "sponsor_products", "organizer", "sponsor_products_images", "organizer_images"],
       "additionalProperties": false
     },
 
@@ -97,7 +101,6 @@
     "editProduct": {
       "type": "object",
       "properties": {
-          "eventId": { "type": "string" },
           "name": { "type": "string" },
           "type": { "type": "string" },
           "location": { "type": "string" },
@@ -106,7 +109,8 @@
           "start_time": { "type": "string" },
           "end_time": { "type": "string" },
           "event_details": { "type": "string" },
-          "sponsor_details": { "type": "string" },
+          "links": { "type": "Array" },
+          "sponsor_products": { "type": "Array" },
           "organizer": { "type": "object" }
       },
       "required": ["eventId"],
@@ -117,9 +121,9 @@
     "deleteProduct": {
       "type": "object",
       "properties": {
-          "productId": { "type": "string" }
+        "eventId": { "type": "string" }
       },
-      "required": ["title"],
+      "required": ["eventId"],
       "additionalProperties": false
     },
   

@@ -16,8 +16,12 @@ export const register = async (req, res) => {
         return res.status(400).send(verifyReq.message);
     }
 
-    const business_logo = req.files && req.files['file'] ? "localhost:3000/" + req.files['file'][0].path : "no_image";
+    const business_logo = req.files && req.files['file'] ? "localhost:3000/" + req.files['file'][0].path : "";
     const { first_name, last_name, email, phone, password, user_role, business_name, business_type } = req.body;
+
+    if (!req.files['business_logo']) {
+        return res.status(200).json({ success: false, message: 'Business logo is required' });
+    }
 
     try {
         const existingUser = await User.findOne({ email });

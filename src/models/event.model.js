@@ -1,6 +1,47 @@
 import mongoose from 'mongoose';
 
+const sponsorProductSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    file: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: String,
+        required: true
+    }
+});
+
+const organizerSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users', 
+        required: true
+    },
+    file: {
+        type: String,
+        required: true 
+    },
+    socialMedia: {
+        instagram: {
+            type: String
+        },
+        facebook: {
+            type: String
+        },
+        twitter: {
+            type: String
+        }
+    }
+});
 const eventSchema = new mongoose.Schema({
+    event_image: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -16,7 +57,7 @@ const eventSchema = new mongoose.Schema({
     locationType: {
         type: String,
         enum: ['indoor', 'outdoor'],
-        required: true
+        default: 'indoor',
     },
     start_date: {
         type: Date,
@@ -38,32 +79,17 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    sponsor_details: {
-        type: String,
+    links: {
+        type: [String],
+        default: [],
         required: true
     },
+    sponsor_products: {
+        type: [sponsorProductSchema],
+        default: []
+    },
     organizer: {
-        type: new mongoose.Schema({
-            user: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'users',
-                required: true
-            },
-            file: {
-                type: Object
-            },
-            socialMedia: {
-                instagram: {
-                    type: String
-                },
-                facebook: {
-                    type: String
-                },
-                twitter: {
-                    type: String
-                }
-            }
-        }),
+        type: organizerSchema,
         required: true
     }
 }, {
