@@ -180,9 +180,11 @@
       "properties": {
           "full_name": { "type": "string" },
           "email": { "type": "string" },
-          "message": { "type": "string" }
+          "message": { "type": "string" },
+          "company_name": { "type": "string" },
+          "phone": { "type": "string" }
       },
-      "required": ["full_name", "email", "message"],
+      "required": ["full_name", "email", "message", "company_name", "phone"],
       "additionalProperties": false
     },
   

@@ -10,7 +10,8 @@ export const addSponsorQuery = async (req, res) => {
     }
 
     try {
-        const newSponsorQuery = new sponsorQuery(req.body);
+        let newSponsorQuery = new sponsorQuery(req.body);
+        newSponsorQuery.organizer_id = req.payload._id
         const savedSponsorQuery = await newSponsorQuery.save();
 
         res.status(201).json({

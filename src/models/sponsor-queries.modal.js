@@ -22,6 +22,11 @@ const sponsorQuerySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    organizer_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
+    }
 }, {
     timestamps: true
 });
