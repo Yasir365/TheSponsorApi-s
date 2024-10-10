@@ -36,7 +36,13 @@ export const register = async (req, res) => {
         const newUser = new User({ first_name, last_name, email, phone, password: hashedPassword, user_role, business_name, business_type, business_logo });
         await newUser.save();
 
-        res.status(201).json({ success: true, message: 'User registered successfully' });
+        delete newUser.password;
+
+        const token = generateToken(newUser)
+
+        newUser.token = token
+
+        res.status(201).json({ success: true, message: 'User registered successfully', data: newUser });
     } catch (error) {
         res.status(200).json({ success: false, message: error.message });
     }
