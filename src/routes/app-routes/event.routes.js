@@ -1,6 +1,6 @@
 import express from 'express';
 import upload from '../../middlewares/multer.middleware.js';
-import { addEvent, updateEvent, deleteEvent, getEvent, uploadFile, getEventById, becomeSponsor } from '../../controllers/event.controller.js';
+import { addEvent, updateEvent, deleteEvent, getEvent, uploadFile, getEventById, becomeSponsor, getIncompleteEvent } from '../../controllers/event.controller.js';
 
 const router = express.Router();
 
@@ -12,5 +12,6 @@ router.delete('/delete-event', deleteEvent);
 router.post('/get-event', getEvent);
 router.post('/get-event/:id', getEventById);
 router.post('/become-sponsor', becomeSponsor);
+router.post('/get-incomplete-event', getIncompleteEvent);
 
 export default router

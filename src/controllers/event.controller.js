@@ -173,7 +173,7 @@ export const getEventById = async (req, res) => {
     if (!eventId) {
         return res.status(400).json({ success: false, message: 'Event ID is required' });
     }
-    
+
     try {
         const eventData = await Event.findById(eventId)
         res.status(200).json({ success: true, message: 'Event Fetched successfully', data: eventData });
@@ -196,6 +196,23 @@ export const becomeSponsor = async (req, res) => {
         eventData.sponsor.push(req.payload._id)
         const updatedEvent = await eventData.save()
         res.status(200).json({ success: true, message: 'Sponsor added successfully', data: updatedEvent });
+    } catch (error) {
+        res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
+    }
+
+}
+
+
+export const getIncompleteEvent = async (req, res) => {
+    const userId = req.payload._id;
+
+    try {
+        const where = {
+            creater: userId,
+            completion_status: false
+        }
+        const eventData = await Event.find(where)
+        res.status(200).json({ success: true, message: 'Fetched Incomplete Event successfully', data: eventData });
     } catch (error) {
         res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
     }
