@@ -21,7 +21,7 @@ export const register = async (req, res) => {
         : "";
     const { first_name, last_name, email, phone, password, user_role, business_name, business_type } = req.body;
 
-    if (!business_logo) {
+    if (!business_logo && user_role == 'sponsor') {
         return res.status(200).json({ success: false, message: 'Business logo is required' });
     }
 
@@ -221,3 +221,25 @@ export const changePassword = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 }
+
+
+export const uploadProfileImage = async (req, res) => {
+    try {
+        if (!req.files || !req.files['file']) {
+            return res.status(400).json({ success: false, message: 'Profile image is required' });
+        }
+        const profile_image = req.files.file
+            ? "localhost:3000/" + req.files.file[0].path
+            : null;
+
+        const user = await User.findByIdAndUpdate(req.payload._id, { profile_image }, { new: true });
+
+        res.status(200).json({ success: true, message: 'Profile image uploaded successfully', data: user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+
+
+}
+
+
