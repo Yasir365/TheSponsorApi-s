@@ -1,5 +1,5 @@
 import express from 'express';
-import { addQuery, deleteQuery, getQuery } from '../controllers/query.controller.js';
+import { addQuery, deleteQuery, getQuery } from '../../controllers/query.controller.js';
 
 
 const router = express.Router();

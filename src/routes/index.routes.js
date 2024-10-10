@@ -1,7 +1,7 @@
 import express from 'express';
-import authRoutes from './auth.routes.js';
-import eventRoutes from './event.routes.js';
-import queryRoutes from './queries.routes.js';
+import authRoutes from './app-routes/auth.routes.js';
+import eventRoutes from './app-routes/event.routes.js';
+import queryRoutes from './app-routes/queries.routes.js';
 import { authenticateToken } from '../middlewares/jwt.middleware.js';
 
 var router = express.Router();

@@ -1,6 +1,6 @@
 import express from 'express';
-import upload from '../middlewares/multer.middleware.js';
-import { addEvent, updateEvent, deleteEvent, getEvent, uploadFile } from '../controllers/event.controller.js';
+import upload from '../../middlewares/multer.middleware.js';
+import { addEvent, updateEvent, deleteEvent, getEvent, uploadFile } from '../../controllers/event.controller.js';
 
 const router = express.Router();
 
