@@ -231,7 +231,8 @@ export const updateUser = async (req, res) => {
     const userId = req.payload._id;
     try {
         const user = await User.findOneAndUpdate({ userId }, { ...req.body }, { new: true });
-        
+        delete user.password
+
         return res.status(200).json({ success: false, message: 'User updated successfully', data: user });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -261,11 +262,25 @@ export const uploadProfileImage = async (req, res) => {
 
 export const deleteAccount = async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.payload._id, { status: 'deactivated' }, { new: true });
-        res.status(200).json({ success: true, message: 'Account deleted successfully', data: user });
+        await User.findByIdAndUpdate(req.payload._id, { status: 'deactivated' }, { new: true });
+
+        res.status(200).json({ success: true, message: 'Account deleted successfully' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 }
 
+
+export const getSponsor = async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const userData = await User.findById(userId)
+        delete userData.password
+        res.status(200).json({ success: true, message: 'Sponsor fetched successfully', data: userData });
+    } catch (error) {
+        res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
+    }
+
+}
 

@@ -165,3 +165,39 @@ export const getEvent = async (req, res) => {
     }
 
 }
+
+
+export const getEventById = async (req, res) => {
+    const eventId = req.params.id;
+
+    if (!eventId) {
+        return res.status(400).json({ success: false, message: 'Event ID is required' });
+    }
+    
+    try {
+        const eventData = await Event.findById(eventId)
+        res.status(200).json({ success: true, message: 'Event Fetched successfully', data: eventData });
+    } catch (error) {
+        res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
+    }
+
+}
+
+
+export const becomeSponsor = async (req, res) => {
+    const eventId = req.body.event_id;
+
+    if (!eventId) {
+        return res.status(400).json({ success: false, message: 'Event ID is required' });
+    }
+
+    try {
+        const eventData = await Event.findById(eventId)
+        eventData.sponsor.push(req.payload._id)
+        const updatedEvent = await eventData.save()
+        res.status(200).json({ success: true, message: 'Sponsor added successfully', data: updatedEvent });
+    } catch (error) {
+        res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
+    }
+
+}

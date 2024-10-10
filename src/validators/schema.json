@@ -38,7 +38,8 @@
         },
         
         
-        "verifyEmail": {
+        
+    "verifyEmail": {
           "type": "object",
           "properties": {
             "email": { "type": "string", "format": "email" },
@@ -129,7 +130,7 @@
           },
         "required": ["event_id", "organizer", "step"],
         "additionalProperties": false
-      }
+      } 
     },
 
 
