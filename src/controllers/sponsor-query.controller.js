@@ -50,7 +50,8 @@ export const getSponsorQuery = async (req, res) => {
     // }
 
     try {
-        const queries = await sponsorQuery.find({});
+        const where = {};
+        const queries = await sponsorQuery.find(where);
         res.status(200).json({
             success: true,
             message: 'Queries Fetched successfully',

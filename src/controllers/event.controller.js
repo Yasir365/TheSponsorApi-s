@@ -114,9 +114,21 @@ export const updateEvent = async (req, res) => {
         return res.status(400).send(verifyReq.message);
     }
 
-
     try {
-        res.status(200).json({ success: true, message: 'Event updated successfully' });
+        const existingEvent = await Event.findById(req.body.event_id);
+        if (!existingEvent) {
+            return res.status(404).json({ success: false, message: 'Event not found' });
+        }
+
+        const event_image = req.files.file
+            ? "localhost:3000/" + req.files.file[0].path
+            : null;
+        if (event_image) {
+            req.body.event_image = event_image;
+        }
+        Object.assign(existingEvent, req.body);
+        const updatedEvent = await existingEvent.save();
+        res.status(200).json({ success: true, message: 'Event updated successfully', data: updatedEvent });
     } catch (error) {
         res.status(200).json({ success: false, message: 'Failed to update event', error: error.message });
     }
@@ -129,23 +141,25 @@ export const deleteEvent = async (req, res) => {
         return res.status(400).send(verifyReq.message);
     }
 
-
     try {
-        res.status(200).json({ success: true, message: 'Event deleted successfully' });
+        const deletedEvent = await Event.findByIdAndDelete(req.body.event_id);
+        res.status(200).json({ success: true, message: 'Event deleted successfully', data: deletedEvent });
     } catch (error) {
         res.status(200).json({ success: false, message: 'Failed to delete event', error: error.message });
     }
 }
 
 export const getEvent = async (req, res) => {
-    const verifyReq = verifySchema(schema.getEvent, req.body);
-    if (!verifyReq.success) {
-        return res.status(400).send(verifyReq.message);
-    }
-
+    // const verifyReq = verifySchema(schema.getEvent, req.body);
+    // if (!verifyReq.success) {
+    //     return res.status(400).send(verifyReq.message);
+    // }
 
     try {
-        res.status(200).json({ success: true, message: 'Event Fetched successfully' });
+        const where = {}
+
+        const eventData = await Event.find(where)
+        res.status(200).json({ success: true, message: 'Event Fetched successfully', data: eventData });
     } catch (error) {
         res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
     }

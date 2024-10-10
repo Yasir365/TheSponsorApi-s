@@ -49,7 +49,8 @@ export const getQuery = async (req, res) => {
     // }
 
     try {
-        const queries = await Query.find({});
+        const where = {};
+        const queries = await Query.find(where);
         res.status(200).json({
             success: true,
             message: 'Queries Fetched successfully',
