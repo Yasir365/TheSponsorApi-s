@@ -222,6 +222,22 @@ export const changePassword = async (req, res) => {
     }
 }
 
+export const updateUser = async (req, res) => {
+    const verifyReq = verifySchema(schema.updateUser, req.body);
+    if (!verifyReq.success) {
+        return res.status(400).send(verifyReq.message);
+    }
+
+    const userId = req.payload._id;
+    try {
+        const user = await User.findOneAndUpdate({ userId }, { ...req.body }, { new: true });
+        
+        return res.status(200).json({ success: false, message: 'User updated successfully', data: user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
 
 export const uploadProfileImage = async (req, res) => {
     try {

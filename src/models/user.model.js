@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-    profile_image:{
+    profile_image: {
         type: String,
         default: ''
     },
@@ -82,6 +82,10 @@ const userSchema = new mongoose.Schema({
             },
             message: 'Business logo is required for sponsors'
         }
+    },
+    business_description: {
+        type: String,
+        default: ""
     }
 }, {
     timestamps: true
