@@ -243,3 +243,13 @@ export const uploadProfileImage = async (req, res) => {
 }
 
 
+export const deleteAccount = async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.payload._id, { status: 'deactivated' }, { new: true });
+        res.status(200).json({ success: true, message: 'Account deleted successfully', data: user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+

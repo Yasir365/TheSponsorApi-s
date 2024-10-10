@@ -82,13 +82,14 @@
             "name": { "type": "string" },
             "type": { "type": "string" },
             "location": { "type": "string" },
+            "location_type": { "type": "string" },
             "start_date": { "type": "string" },
             "end_date": { "type": "string" },
             "start_time": { "type": "string" },
             "end_time": { "type": "string" },
             "step": { "type": "string" }
           },
-        "required": ["name", "type", "location", "start_date", "end_date", "start_time", "end_time", "step"],
+        "required": ["name", "type", "location", "location_type", "start_date", "end_date", "start_time", "end_time", "step"],
         "additionalProperties": false
       },
       "step2": {

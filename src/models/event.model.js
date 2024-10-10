@@ -100,6 +100,11 @@ const eventSchema = new mongoose.Schema({
         ref: 'users',
         required: true
     },
+    sponsor: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'users',
+        default: [] 
+    }
 }, {
     timestamps: true
 });
