@@ -22,13 +22,13 @@ export const register = async (req, res) => {
     const { first_name, last_name, email, phone, password, user_role, business_name, business_type } = req.body;
 
     if (!business_logo && user_role == 'sponsor') {
-        return res.status(200).json({ success: false, message: 'Business logo is required' });
+        return res.status(400).json({ success: false, error: 'Business logo is required' });
     }
 
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ success: false, message: 'Email already exists' });
+            return res.status(400).json({ success: false, error: 'Email already exists' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -44,7 +44,7 @@ export const register = async (req, res) => {
 
         res.status(201).json({ success: true, message: 'User registered successfully', data: newUser });
     } catch (error) {
-        res.status(200).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 };
 
@@ -59,12 +59,12 @@ export const login = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(200).json({ success: false, message: 'Incorrect Email or Password' });
+            return res.status(400).json({ success: false, error: 'Incorrect Email or Password' });
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Incorrect Email or Password' });
+            return res.status(400).json({ error: 'Incorrect Email or Password' });
         }
 
         const userData = { ...user.toObject() };
@@ -80,7 +80,7 @@ export const login = async (req, res) => {
             data: userData,
         });
     } catch (error) {
-        res.status(200).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 };
 
@@ -95,7 +95,7 @@ export const forgetPassword = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(200).json({ success: false, message: 'User not found' });
+            return res.status(400).json({ success: false, error: 'User not found' });
         }
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -114,7 +114,7 @@ export const forgetPassword = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(200).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 }
 
@@ -129,11 +129,11 @@ export const verifyOTP = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            return res.status(400).json({ success: false, error: 'User not found' });
         }
 
         if (user.otp !== otp || user.otpExpiry < Date.now()) {
-            return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+            return res.status(400).json({ success: false, error: 'Invalid or expired OTP' });
         }
 
         return res.status(200).json({
@@ -141,7 +141,7 @@ export const verifyOTP = async (req, res) => {
             success: true
         });
     } catch (error) {
-        res.status(200).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 };
 
@@ -156,7 +156,7 @@ export const resetPassword = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            return res.status(400).json({ success: false, error: 'User not found' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -167,29 +167,15 @@ export const resetPassword = async (req, res) => {
         return res.status(200).json({ success: true, message: 'Password reset successfully!' });
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 };
 
 
 export const verifyToken = async (req, res) => {
-    let token = req.headers['authorization'];
-    if (token && token.startsWith('Bearer ')) {
-        token = token.slice(7); // Remove the 'Bearer ' prefix
-    } else {
-        return res.status(401).json({ message: 'Unauthorized' });
-
-    }
-    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
-        if (err) {
-            return res.status(200).json({ message: 'Invalid token', success: false });
-        }
-        req.user = decodedToken;
-        return res.status(200).json({
-            message: 'Token verified',
-            success: true,
-            role: decodedToken.role,
-        });
+    return res.status(200).json({
+        message: 'Token verified',
+        success: true,
     });
 }
 
@@ -208,7 +194,7 @@ export const changePassword = async (req, res) => {
 
         const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
         if (!isPasswordValid) {
-            return res.status(200).json({ success: false, message: 'Incorrect old password' });
+            return res.status(400).json({ success: false, error: 'Incorrect old password' });
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -279,7 +265,7 @@ export const getSponsor = async (req, res) => {
         delete userData.password
         res.status(200).json({ success: true, message: 'Sponsor fetched successfully', data: userData });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to fetch Sponsor', error: error.message });
     }
 
 }

@@ -168,30 +168,6 @@
 
 
     
-    "addQuery": {
-      "type": "object",
-      "properties": {
-          "full_name": { "type": "string" },
-          "email": { "type": "string" },
-          "message": { "type": "string" }
-      },
-      "required": ["full_name", "email", "message"],
-      "additionalProperties": false
-    },
-  
-
-    "deleteQuery": {
-      "type": "object",
-      "properties": {
-          "id": { "type": "string" }
-      },
-      "required": ["id"],
-      "additionalProperties": false
-    },
-    
-
-
-
 
     "addSponsorQuery": {
       "type": "object",

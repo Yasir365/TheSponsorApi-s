@@ -10,7 +10,7 @@ router.post('/login', login);
 router.post('/forget-password', forgetPassword);
 router.post('/verify-otp', verifyOTP);
 router.post('/reset-password', resetPassword);
-router.get('/verify-token', verifyToken);
+router.get('/verify-token',authenticateToken, verifyToken);
 router.post('/change-password', authenticateToken, changePassword);
 router.post('/update-user', authenticateToken, updateUser);
 router.post('/upload-profile', authenticateToken, upload, uploadProfileImage);

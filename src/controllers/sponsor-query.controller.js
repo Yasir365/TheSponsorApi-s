@@ -20,7 +20,7 @@ export const addSponsorQuery = async (req, res) => {
             data: savedSponsorQuery,
         });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to send message', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to send message', error: error.message });
     }
 }
 
@@ -38,7 +38,7 @@ export const deleteSponsorQuery = async (req, res) => {
             message: 'Sponsor Query deleted successfully'
         });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to delete event', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to delete event', error: error.message });
     }
 }
 
@@ -58,7 +58,7 @@ export const getSponsorQuery = async (req, res) => {
             data: queries
         });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to fetch queries', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to fetch queries', error: error.message });
     }
 
 }

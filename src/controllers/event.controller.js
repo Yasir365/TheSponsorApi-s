@@ -14,13 +14,11 @@ export const addEvent = async (req, res) => {
                 return res.status(400).send(verifyReq.message);
             }
 
-            const event_image = req.files.file
-                ? "localhost:3000/" + req.files.file[0].path
-                : null;
-
-            if (!event_image) {
+            if (!req.files || !req.files['file']) {
                 return res.status(400).json({ success: false, message: 'Event image is required' });
             }
+            const event_image = "localhost:3000/" + req.files.file[0].path;
+
 
             const tempEvent = {
                 ...req.body,
@@ -47,7 +45,7 @@ export const addEvent = async (req, res) => {
 
             const existingEvent = await Event.findById(req.body.event_id);
             if (!existingEvent) {
-                return res.status(404).json({ success: false, message: 'Event not found' });
+                return res.status(400).json({ success: false, error: 'Event not found' });
             }
 
             Object.assign(existingEvent, req.body);
@@ -69,7 +67,7 @@ export const addEvent = async (req, res) => {
 
             const existingEvent = await Event.findById(req.body.event_id);
             if (!existingEvent) {
-                return res.status(404).json({ success: false, message: 'Event not found' });
+                return res.status(400).json({ success: false, message: 'Event not found' });
             }
 
             req.body['completion_status'] = true
@@ -94,15 +92,15 @@ export const addEvent = async (req, res) => {
 
 export const uploadFile = async (req, res) => {
     try {
-        const file = req.files.file ? "localhost:3000/" + req.files.file[0].path : null;
-
-        if (!file) {
+        if (!req.files || !req.files['file']) {
             return res.status(400).json({ success: false, message: 'File is required' });
         }
+        const file = req.files.file ? "localhost:3000/" + req.files.file[0].path : null;
+
 
         res.status(200).json({ success: true, file: file, message: 'File uploaded successfully' });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to update event', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to update event', error: error.message });
     }
 
 }
@@ -117,15 +115,14 @@ export const updateEvent = async (req, res) => {
     try {
         const existingEvent = await Event.findById(req.body.event_id);
         if (!existingEvent) {
-            return res.status(404).json({ success: false, message: 'Event not found' });
+            return res.status(400).json({ success: false, error: 'Event not found' });
         }
 
-        const event_image = req.files.file
-            ? "localhost:3000/" + req.files.file[0].path
-            : null;
-        if (event_image) {
-            req.body.event_image = event_image;
+        if (!req.files || !req.files['file']) {
+            return res.status(400).json({ success: false, error: 'Event image is required' });
         }
+        const event_image = "localhost:3000/" + req.files.file[0].path;
+        req.body.event_image = event_image;
         Object.assign(existingEvent, req.body);
         const updatedEvent = await existingEvent.save();
         res.status(200).json({ success: true, message: 'Event updated successfully', data: updatedEvent });
@@ -145,7 +142,7 @@ export const deleteEvent = async (req, res) => {
         const deletedEvent = await Event.findByIdAndDelete(req.body.event_id);
         res.status(200).json({ success: true, message: 'Event deleted successfully', data: deletedEvent });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to delete event', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to delete event', error: error.message });
     }
 }
 
@@ -161,7 +158,7 @@ export const getEvent = async (req, res) => {
         const eventData = await Event.find(where)
         res.status(200).json({ success: true, message: 'Event Fetched successfully', data: eventData });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to fetch event', error: error.message });
     }
 
 }
@@ -178,7 +175,7 @@ export const getEventById = async (req, res) => {
         const eventData = await Event.findById(eventId)
         res.status(200).json({ success: true, message: 'Event Fetched successfully', data: eventData });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to fetch event', error: error.message });
     }
 
 }
@@ -197,7 +194,7 @@ export const becomeSponsor = async (req, res) => {
         const updatedEvent = await eventData.save()
         res.status(200).json({ success: true, message: 'Sponsor added successfully', data: updatedEvent });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to fetch event', error: error.message });
     }
 
 }
@@ -214,7 +211,7 @@ export const getIncompleteEvent = async (req, res) => {
         const eventData = await Event.find(where)
         res.status(200).json({ success: true, message: 'Fetched Incomplete Event successfully', data: eventData });
     } catch (error) {
-        res.status(200).json({ success: false, message: 'Failed to fetch event', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to fetch event', error: error.message });
     }
 
 }
